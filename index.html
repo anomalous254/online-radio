@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Live Radio</title>
+</head>
+
+<body style="font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #e0f7fa, #ffffff); padding: 20px; color: #333;">
+
+  <h2 style="text-align: center; color: #0077cc;">🎧 Live Radio Stations (Kenya, Jamaica, Nigeria)</h2>
+
+  <div style="max-width: 500px; margin: 20px auto; background: #ffffff; border-radius: 15px; padding: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); text-align: center;">
+
+    <!-- Styled Audio Player -->
+    <audio id="audio" controls style="width: 100%; border-radius: 10px; outline: none; margin-bottom: 20px;"></audio>
+
+    <!-- Radio Selector -->
+    <select id="selector"
+      style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; background: #f9f9f9; margin-bottom: 10px;">
+      <option value="">-- Select a Radio Station --</option>
+
+      <!-- Kenyan Radios -->
+      <optgroup label="🇰🇪 Kenya">
+        <option value="classic105">Classic 105</option>
+        <option value="kiss100">Kiss 100</option>
+        <option value="radiojambo">Radio Jambo</option>
+        <option value="milelefm">Milele FM</option>
+        <option value="kameme">Kameme FM</option>
+      </optgroup>
+
+      <!-- Jamaican Radios -->
+      <optgroup label="🇯🇲 Jamaica">
+        <option value="irie">IRIE FM</option>
+        <option value="mello">Mello FM</option>
+        <option value="love101">Love 101 FM</option>
+        <option value="zipfm">ZIP 103 FM</option>
+      </optgroup>
+
+      <!-- Nigerian Radios -->
+      <optgroup label="🇳🇬 Nigeria">
+        <option value="coolfm">Cool FM Lagos</option>
+        <option value="wazobia">Wazobia FM</option>
+        <option value="raypower">Raypower FM</option>
+        <option value="inspiration">Inspiration FM</option>
+      </optgroup>
+    </select>
+
+    <p style="font-size: 14px; color: #888; margin-top: 10px;">Choose your vibe and let the beats flow 🎶</p>
+  </div>
+
+  <script>
+    const audio = document.getElementById('audio');
+    const selector = document.getElementById('selector');
+
+    const stations = {
+      // ✅ Kenyan Streams
+      classic105: "https://s3.radio.co/s95d55b219/listen",
+      kiss100: "https://stream.zeno.fm/2r2rqc2er18uv",
+      radiojambo: "https://stream.zeno.fm/radiojambo",
+      milelefm: "https://atunwadigital.streamguys1.com/milelefm",
+      kameme: "https://atunwadigital.streamguys1.com/kamemefm",
+
+      // ✅ Jamaican Streams
+      irie: "https://streamingv2.shoutcast.com/iriefm",
+      mello: "https://node-32.zeno.fm/sd1fvq7v2wzuv",
+      love101: "https://love101.org:8443/live",
+      zipfm: "http://zipfm.net:8000/zipfm",
+
+      // ✅ Nigerian Streams
+      coolfm: "https://stream.coolfm.ng/coolfm.mp3",
+      wazobia: "https://stream.wazobiafm.ng/wazobiafm.mp3",
+      raypower: "https://streaming.radiosure.co/raypowerlive",
+      inspiration: "https://streaming.inspirationfm.ng/inspirationfm"
+    };
+
+    selector.onchange = () => {
+      const selected = selector.value;
+      if (stations[selected]) {
+        audio.src = stations[selected];
+        audio.play();
+      }
+    };
+  </script>
+
+</body>
+
+</html>
