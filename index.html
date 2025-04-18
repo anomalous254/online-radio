@@ -3,89 +3,79 @@
 
 <head>
   <title>Live Radio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body style="font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #e0f7fa, #ffffff); padding: 20px; color: #333;">
 
-  <h2 style="text-align: center; color: #0077cc;">🎧 Live Radio Stations (Kenya, Jamaica, Nigeria)</h2>
+  <h2 style="text-align: center; color: #0077cc;">🎧 Live Radio Stations</h2>
 
   <div style="max-width: 500px; margin: 20px auto; background: #ffffff; border-radius: 15px; padding: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); text-align: center;">
 
-    <!-- Styled Audio Player -->
+    <!-- Audio Player -->
     <audio id="audio" controls style="width: 100%; border-radius: 10px; outline: none; margin-bottom: 20px;"></audio>
 
-    <!-- Radio Selector -->
-    <select id="selector"
-      style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; background: #f9f9f9; margin-bottom: 10px;">
-      <option value="">-- Select a Radio Station --</option>
+    <!-- Country Selector -->
+    <select id="countrySelector"
+      style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; background: #f0f9ff; margin-bottom: 15px;">
+      <option value="">🌍 -- Choose Country --</option>
+      <option value="Kenya">🇰🇪 Kenya</option>
+      <option value="Nigeria">🇳🇬 Nigeria</option>
+      <option value="Jamaica">🇯🇲 Jamaica</option>
+      <option value="United States">🇺🇸 USA</option>
+      <option value="India">🇮🇳 India</option>
+    </select>
 
-      <!-- Kenyan Radios -->
-      <optgroup label="🇰🇪 Kenya">
-        <option value="classic105">Classic 105</option>
-        <option value="kiss100">Kiss 100</option>
-        <option value="radiojambo">Radio Jambo</option>
-        <option value="milelefm">Milele FM</option>
-        <option value="kameme">Kameme FM</option>
-      </optgroup>
-
-      <!-- Jamaican Radios -->
-      <optgroup label="🇯🇲 Jamaica">
-        <option value="irie">IRIE FM</option>
-        <option value="mello">Mello FM</option>
-        <option value="love101">Love 101 FM</option>
-        <option value="zipfm">ZIP 103 FM</option>
-      </optgroup>
-
-      <!-- Nigerian Radios -->
-      <optgroup label="🇳🇬 Nigeria">
-        <option value="coolfm">Cool FM Lagos</option>
-        <option value="wazobia">Wazobia FM</option>
-        <option value="raypower">Raypower FM</option>
-        <option value="inspiration">Inspiration FM</option>
-      </optgroup>
+    <!-- Station Selector -->
+    <select id="stationSelector"
+      style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; background: #f9f9f9;">
+      <option value="">📻 -- Select a Radio Station --</option>
     </select>
 
     <p style="font-size: 14px; color: #888; margin-top: 10px;">Choose your vibe and let the beats flow 🎶</p>
   </div>
 
-    <!-- Footer -->
-  <footer style="max-width: 500px; margin: 30px auto; text-align: center; font-size: 14px; color: #666;">
+  <!-- Footer -->
+  <footer style="text-align: center; margin-top: 40px; font-size: 14px; color: #777;">
+    <p>Made with ❤️ by <strong>Peter Nyando</strong></p>
+  <!--   <p><a href="#" style="color: #0077cc;">Privacy Policy</a></p> -->
     <p>
-      Follow: 
-      <a href="https://x.com/anomalous254" target="_blank" style="color: #0077cc; text-decoration: none;">X</a> | 
-      <a href="https://github.com/anomalous254" target="_blank" style="color: #0077cc; text-decoration: none;">GitHub</a>
+      <a href="https://x.com/anomalous254" target="_blank" style="margin-right: 10px; color: #0077cc;">X</a>
+      <a href="https://github.com/anomalous254" target="_blank" style="color: #0077cc;">GitHub</a>
     </p>
   </footer>
 
   <script>
     const audio = document.getElementById('audio');
-    const selector = document.getElementById('selector');
+    const countrySelector = document.getElementById('countrySelector');
+    const stationSelector = document.getElementById('stationSelector');
 
-    const stations = {
-      // ✅ Kenyan Streams
-      classic105: "https://s3.radio.co/s95d55b219/listen",
-      kiss100: "https://stream.zeno.fm/2r2rqc2er18uv",
-      radiojambo: "https://stream.zeno.fm/radiojambo",
-      milelefm: "https://atunwadigital.streamguys1.com/milelefm",
-      kameme: "https://atunwadigital.streamguys1.com/kamemefm",
+    countrySelector.addEventListener('change', () => {
+      const country = countrySelector.value;
+      stationSelector.innerHTML = '<option value="">📻 -- Loading stations... --</option>';
 
-      // ✅ Jamaican Streams
-      irie: "https://streamingv2.shoutcast.com/iriefm",
-      mello: "https://node-32.zeno.fm/sd1fvq7v2wzuv",
-      love101: "https://love101.org:8443/live",
-      zipfm: "http://zipfm.net:8000/zipfm",
+      if (!country) return;
 
-      // ✅ Nigerian Streams
-      coolfm: "https://stream.coolfm.ng/coolfm.mp3",
-      wazobia: "https://stream.wazobiafm.ng/wazobiafm.mp3",
-      raypower: "https://streaming.radiosure.co/raypowerlive",
-      inspiration: "https://streaming.inspirationfm.ng/inspirationfm"
-    };
+      fetch(`https://de1.api.radio-browser.info/json/stations/bycountry/${encodeURIComponent(country)}`)
+        .then(res => res.json())
+        .then(data => {
+          stationSelector.innerHTML = '<option value="">📻 -- Select a Radio Station --</option>';
+          data.forEach(station => {
+            const option = document.createElement('option');
+            option.value = station.url_resolved;
+            option.textContent = station.name;
+            stationSelector.appendChild(option);
+          });
+        })
+        .catch(() => {
+          stationSelector.innerHTML = '<option value="">⚠️ Could not load stations.</option>';
+        });
+    });
 
-    selector.onchange = () => {
-      const selected = selector.value;
-      if (stations[selected]) {
-        audio.src = stations[selected];
+    stationSelector.onchange = () => {
+      const selectedStream = stationSelector.value;
+      if (selectedStream) {
+        audio.src = selectedStream;
         audio.play();
       }
     };
